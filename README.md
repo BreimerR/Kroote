@@ -39,10 +39,9 @@ kotlin {
 }
 // Only use depending on your requirements either jvm/kotlin/multiplatform 
 dependencies {
-    add(
-        "kspMetadata",
-        project(":kroote")
-    ) // for kotlin common I think 😅 Could't find specifications & using alone might cause descriptor exceptions.
+    // for kotlin common I think 😅 Could't find specifications & using alone might cause descriptor exceptions.
+    add("kspMetadata", project(":kroote")) 
+    
     add("kspJvm", project(":kroote")) //
     add("kspJvmTest", project(":kroote"))
     add("kspMetadata", project(":kroote"))
