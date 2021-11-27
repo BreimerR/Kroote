@@ -6,13 +6,10 @@ data class Method(
     val route: String? = null,
     val authenticatedBy: String? = null
 ) {
-    val parameters by lazy {
-        mutableListOf<Parameter>()
-    }
 
-    fun getActualCode(indent: String) = code.split('\n').joinToString("\n") { "$indent$it" }
+    private fun getActualCode(indent: String) = code.split('\n').joinToString("\n") { "$indent$it" }
 
-    val path by lazy {
+    private val path by lazy {
         if (route == null || route == "") {
             ""
         } else "($route)"
