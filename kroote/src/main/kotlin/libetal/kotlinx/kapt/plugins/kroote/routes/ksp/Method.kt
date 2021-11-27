@@ -12,7 +12,7 @@ data class Method(
     private val path by lazy {
         if (route == null || route == "") {
             ""
-        } else "($route)"
+        } else """("$route")"""
     }
 
     fun toString(indent: String = ""): String = if (authenticatedBy == null || authenticatedBy.isBlank()) {

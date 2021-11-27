@@ -39,20 +39,19 @@ kotlin {
 }
 // Only use depending on your requirements either jvm/kotlin/multiplatform 
 dependencies {
-    // for kotlin common I think 😅 Could't find specifications & using alone might cause descriptor exceptions.
-    add("kspMetadata", project(":kroote")) 
-    
-    add("kspJvm", project(":kroote")) //
-    add("kspJvmTest", project(":kroote"))
+    // for kotlin common I think 😅 Couldn't find specifications & using alone might cause descriptor exceptions.
     add("kspMetadata", project(":kroote"))
-    add("kspJs", project(":kroote"))
-    add("kspJsTest", project(":kroote"))
-    add("kspAndroidNativeArm64", project(":kroote"))
-    add("kspAndroidNativeArm64Test", project(":kroote"))
-    add("kspLinuxX64", project(":kroote"))
-    add("kspLinuxX64Test", project(":kroote"))
-    add("kspMingwX64", project(":kroote"))
-    add("kspMingwX64Test", project(":kroote"))
+
+    add("kspJvm", project(":kroote")) // jvmMainCodeGeneration
+    add("kspJvmTest", project(":kroote")) // jvmTestCodeGeneration
+    add("kspJs", project(":kroote")) // jsMainCode generation
+    add("kspJsTest", project(":kroote")) // ...  
+    add("kspAndroidNativeArm64", project(":kroote")) // ...
+    add("kspAndroidNativeArm64Test", project(":kroote")) // ...
+    add("kspLinuxX64", project(":kroote")) // ...
+    add("kspLinuxX64Test", project(":kroote")) // ...
+    add("kspMingwX64", project(":kroote")) // ...
+    add("kspMingwX64Test", project(":kroote")) // ...
 }
 ```
 

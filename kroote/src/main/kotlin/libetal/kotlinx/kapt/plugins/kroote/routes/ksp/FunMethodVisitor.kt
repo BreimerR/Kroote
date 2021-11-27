@@ -36,6 +36,12 @@ class FunMethodVisitor(private val methodName: String, private val ksAnnotation:
         }
     }
 
+    /**@Description
+     * Creates code going into a method route i.e
+     * get{
+     *    code goes here
+     * }
+     * */
     private fun getActualCode(function: KSFunctionDeclaration): String {
 
         val functionName =
@@ -64,10 +70,15 @@ class FunMethodVisitor(private val methodName: String, private val ksAnnotation:
 
                 parameters.forEachIndexed { i, (valueParameter, ksAnnotation) ->
 
-                    val defaultValue = ksAnnotation.arguments[0].value?.toString()
+                    val delegateParameters = DelegateParameters(ksAnnotation.arguments)
+
 
                     val valueParameterName = valueParameter.name?.asString()
                         ?: throw RuntimeException("Can't resolve name for parameter in function $functionName")
+
+                    val name by delegateParameters {
+                        it?.toString()?.ifBlank { null } ?: valueParameterName
+                    }
 
                     if (i == 0)
                         parametersString += valueParameterName
@@ -75,7 +86,7 @@ class FunMethodVisitor(private val methodName: String, private val ksAnnotation:
                         parametersString += ", $valueParameterName"
 
                     results += """|
-                        |val $valueParameterName = $parametersValName["$valueParameterName"]?.""".trimMargin()
+                        |val $valueParameterName = $parametersValName["$name"]?.""".trimMargin()
 
                     results += when (val valueParameterType =
                         valueParameter.type.resolve().declaration.qualifiedName?.asString()) {
@@ -88,15 +99,23 @@ class FunMethodVisitor(private val methodName: String, private val ksAnnotation:
                     } + "()"
 
                     if (!valueParameter.type.resolve().isMarkedNullable) {
-                        if (defaultValue == null || defaultValue.isBlank()) Logger.error("Provide default value for parameter [$i]($valueParameterName) for function $functionName")
 
+                        val defaultValue by delegateParameters {
+                            val defaultValue = it?.toString()
 
-                        results += "?:" + when (val valueParameterType =
+                            defaultValue?.ifBlank { Logger.error("""Can't use defaultValueAs("") for parameter [$i]($valueParameterName) for function $functionName()""") }
+                            defaultValue
+                                ?: Logger.error("Provide default value for parameter [$i]($valueParameterName) for function $functionName(), enforcement might happen in next release.")
+
+                            defaultValue!!
+                        }
+
+                        results += " ?: " + when (val valueParameterType =
                             valueParameter.type.resolve().declaration.qualifiedName?.asString()) {
                             "kotlin.String", "String" -> """"$defaultValue""""
-                            "kotlin.Int", "Int" -> defaultValue!!.toInt()
-                            "kotlin.Float", "Float" -> defaultValue!!.toFloat()
-                            "kotlin.Boolean", "Boolean" -> defaultValue!!.toBoolean()
+                            "kotlin.Int", "Int" -> defaultValue.toInt()
+                            "kotlin.Float", "Float" -> defaultValue.toFloat()
+                            "kotlin.Boolean", "Boolean" -> defaultValue.toBoolean()
                             null -> throw RuntimeException("Could not resolve type for parameter $i of function $functionName")
                             else -> throw RuntimeException("Unsupported Type $valueParameterType")
                         }
