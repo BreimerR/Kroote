@@ -66,14 +66,31 @@ plugins {
 }
 ```
 
+## Dependencies
+
+[BuildSrc](https://github.com/BreimerR/BuildSrc.git) // Easy to use gradle scripts
+
+> Run
+1. ```git clone https://github.com/BreimerR/BuildSrc.git```
+2. ```cd BuildSrc```
+3. ```build publishMavenLocal```
+>
+> Add to your project
+> ```
+> repositories{  
+>     //...  
+>     mavenLocal()  
+> }
+> ```
+
 ## Design
 
 ## Issues
 
 ### Versioning conventions
 
-First digit: Major Release Second Digit: Bug fixes 3rd digit: Go Crazy -SNAPSHOT Indicates no test cases have been
-written for the version
+[libraryMajorVersion][libraryMinorUpdatesVersion][kotlinVersion][untestedIdentifier]
+1.0.1531-SNAPSHOT
 
 ## Publishing *Unpublished*
 
